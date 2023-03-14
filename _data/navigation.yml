@@ -1,0 +1,13 @@
+- name: About
+  link: /about/
+- name: Install
+  link: /install/
+- name: Vignettes
+  link: /vignettes/
+- name: Features
+  link: /features/
+- name: FAQ
+  link: /faq/
+#   dropdown: 
+#     - name: Page 2
+#       link: /page-2/
