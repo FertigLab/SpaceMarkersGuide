@@ -1,7 +1,7 @@
 ---
 
 layout: page
-title: Space Markers
+title: SpaceMarkers
 subtitle: An R/Bioconductor software tool to identify genes associated with latent space interactions in spatial transcriptomics.
 hero_image: /spacemarkers/images/spacehero.jpg
 <!-- hero_height: is-fullwidth -->
