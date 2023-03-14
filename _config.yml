@@ -3,10 +3,10 @@ remote_theme: chrisrhymes/bulma-clean-theme
 permalink: pretty
 
 lang: en
-title: Space Markers
-tagline: Space Markers
+title: SpaceMarkers
+tagline: SpaceMarkers
 description: >
-  The website for Space Markers
+  The website for SpaceMarkers
 fixed_navbar: top
 # favicon: /images/favicon.png
 
