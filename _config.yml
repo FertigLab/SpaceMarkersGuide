@@ -1,1 +1,22 @@
 remote_theme: chrisrhymes/bulma-clean-theme
+
+permalink: pretty
+
+lang: en
+title: Space Markers
+tagline: Space Markers
+description: >
+  The website for Space Markers
+fixed_navbar: top
+# favicon: /images/favicon.png
+
+exclude: 
+  - Gemfile
+  - clean-theme.gemspec
+  - Gemfile.lock
+  - node_modules
+  - vendor/bundle/
+  - vendor/cache/
+  - vendor/gems/
+  - vendor/ruby/
+  - README.md
