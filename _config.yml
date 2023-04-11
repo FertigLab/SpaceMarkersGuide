@@ -8,7 +8,7 @@ tagline: SpaceMarkers
 description: >
   The website for SpaceMarkers
 fixed_navbar: top
-# favicon: /images/favicon.png
+favicon: /images/SpaceMarkersFavicon.png
 
 exclude: 
   - Gemfile
