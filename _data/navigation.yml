@@ -2,10 +2,10 @@
   link: /about/
 - name: Install
   link: /install/
-- name: Vignettes
-  link: /vignettes/
-- name: Features
-  link: /features/
+- name: Vignette
+  link: /vignette/
+- name: Troubleshooting
+  link: /Troubleshooting/
 - name: FAQ
   link: /faq/
 #   dropdown: 
