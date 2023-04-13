@@ -11,3 +11,12 @@ show_sidebar: false
 hero_link_text: GitHub Repository -->
 
 ---
+
+# Installation
+
+You can install SpaceMarkers directly from the GitHub source.
+
+```r
+install.packages(“remotes”)
+remotes::install_github(“FertigLab/SpaceMarkers”, dependencies = TRUE, build_vignettes = TRUE)
+```
