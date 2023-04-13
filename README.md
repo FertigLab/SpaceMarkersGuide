@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="SpaceMarkersHexWhite.png" width="200" title="SpaceMarkers hex logo">
+  <img src="/images/SpaceMarkersHexWhite.png" width="200" title="SpaceMarkers hex logo">
 </p>
 
 # SpaceMarkers
