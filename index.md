@@ -11,3 +11,5 @@ hero_link: https://github.com/FertigLab/SpaceMarkers
 hero_link_text: GitHub Repository
 
 ---
+
+<img src="images/SpaceMarkersHexWhite.png" align="left" style="margin: 0px 20px 0px 0px;" />
