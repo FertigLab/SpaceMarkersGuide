@@ -12,7 +12,7 @@ hero_link_text: GitHub Repository -->
 
 ---
 
-How to get help:
+# How to get help:
 
 If you are having trouble using SpaceMarkers in your application, please raise an issue on the SpaceMarkers GitHub page below:
 
