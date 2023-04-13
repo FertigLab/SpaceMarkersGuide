@@ -12,8 +12,6 @@ hero_link_text: GitHub Repository -->
 
 ---
 
-# Troubleshooting
-
 If you are having trouble using SpaceMarkers in your application, please raise an issue on the SpaceMarkers GitHub page below:
 
 [https://github.com/FertigLab/SpaceMarkers/issues](https://github.com/FertigLab/SpaceMarkers/issues)
