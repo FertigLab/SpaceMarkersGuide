@@ -12,4 +12,4 @@ hero_link_text: GitHub Repository
 
 ---
 
-<img src="images/SpaceMarkersHexWhite.png" align="left" style="margin: 0px 20px 0px 0px;" />
+<img src="images/SpaceMarkersHexWhite250.png" align="left" style="margin: 0px 20px 0px 0px;" />
