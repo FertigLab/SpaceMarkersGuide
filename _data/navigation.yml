@@ -1,5 +1,5 @@
-- name: Install
-  link: /install/
+- name: Tutorial
+  link: /tutorial/
 - name: Vignette
   link: /vignette/
 - name: Troubleshooting
