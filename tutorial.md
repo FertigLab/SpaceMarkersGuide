@@ -34,3 +34,14 @@ library(SpaceMarkers)
 #> Warning: replacing previous import 'dplyr::lag' by 'stats::lag' when loading
 #> 'SpaceMarkers'
 ```
+
+# Obtaining and Formatting the Data
+
+The data that will be used to demonstrate SpaceMarkers capabilities is a human breast cancer spatial transcriptomics dataset that comes from Visium. The CoGAPS patterns as seen in the manuscript [Atul Deshpande, Melanie Loth, et al.](https://www.biorxiv.org/content/10.1101/2022.06.02.490672v1) will also be taken from GitHub.
+
+```
+counts_url <- "https://cf.10xgenomics.com/samples/spatial-exp/1.3.0/Visium_Human_Breast_Cancer/Visium_Human_Breast_Cancer_filtered_feature_bc_matrix.h5"
+spatial_url <- "https://cf.10xgenomics.com/samples/spatial-exp/1.3.0/Visium_FFPE_Human_Breast_Cancer/Visium_FFPE_Human_Breast_Cancer_spatial.tar.gz"
+cogaps_url <- "https://github.com/atuldeshpande/SpaceMarkers-paper/blob/main/CoGAPS_Analysis/BreastCancer/182967_1168993F_2_CogapsResult_5.rds?raw=true"
+opt_params_path <- "optParams_breast_cancer.tsv"
+```
