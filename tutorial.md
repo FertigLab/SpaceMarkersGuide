@@ -288,7 +288,7 @@ In addition to IGHE, HNRNPAB, and APOC1, CLU and TYROBP are also ranked high in 
 
 There is some agreement with interacting genes between the two methods but there are also quite a few differences. Therefore, the selected mode can significantly impact the downstream results and should be taken into consideration based on the specific biological question being answered and the data available.
 
-# Load 10XExpr() Arguments
+# load10XExpr() Arguments
 
 <table>
 <thead>
@@ -310,3 +310,165 @@ directory</td>
 </tr>
 </tbody>
 </table>
+
+# load10XCoords() Arguments
+
+<table>
+<colgroup>
+<col width="4%" />
+<col width="95%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">visiumDir</td>
+<td align="left">A string path to the location of the folder containing
+the spatial coordinates. The folder in your visiumDir must be named
+‘spatial’ and must contain files ‘scalefactors_json.json’ and
+‘tissue_positions_list.csv’.</td>
+</tr>
+<tr class="even">
+<td align="left">resolution</td>
+<td align="left">A string specifying which values to look for in the
+.json object. Can be either lowres or highres.</td>
+</tr>
+</tbody>
+</table>
+
+# getSpatialParameters() Arguments
+
+<table>
+<colgroup>
+<col width="8%" />
+<col width="91%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">spatialPatterns</td>
+<td align="left">A data frame that contains the spatial coordinates for
+each cell type. The column names must include ‘x’ and ‘y’ as well as a
+set of numbered columns named ‘Pattern_1…..N’.</td>
+</tr>
+</tbody>
+</table>
+
+# getInteractingGenes() Arguments
+
+<table>
+<colgroup>
+<col width="8%" />
+<col width="91%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th align="left">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">data</td>
+<td align="left">A data frame of expression information with rows being
+the features/genes and columns being the samples/cells.</td>
+</tr>
+<tr class="even">
+<td align="left">reconstruction</td>
+<td align="left">A data frame of features (rows) and samples (columns)
+constructed from the information of a latent feature method such as
+CoGAPs or STdeconvolve. NULL if ‘DE’ mode is specified</td>
+</tr>
+<tr class="odd">
+<td align="left">optParams</td>
+<td align="left">A data frame that for each pattern has the sigmaOpts -
+the optimal width of the gaussian distribution and the thresOpt -
+outlier threshold around the set of spots.</td>
+</tr>
+<tr class="even">
+<td align="left">spatialPatterns</td>
+<td align="left">A data frame that contains the spatial coordinates for
+each cell type. The column names must include ‘x’ and ‘y’ as well as a
+set of numbered columns named ‘Pattern_1…..N’.</td>
+</tr>
+<tr class="odd">
+<td align="left">refPattern</td>
+<td align="left">A string of the pattern you want to use to compare to
+the other patterns in the latent feature space</td>
+</tr>
+<tr class="even">
+<td align="left">mode</td>
+<td align="left">A string specifying either ‘residual’ mode or ‘DE’ mode
+for finding interacting genes</td>
+</tr>
+<tr class="odd">
+<td align="left">minOverlap</td>
+<td align="left">a number that specifies the minimum overlap between
+genes in two patterns to be considered for the statistical tests. The
+default is 50.</td>
+</tr>
+<tr class="even">
+<td align="left">hotspotRegions</td>
+<td align="left">a vector that specifies the patterns to compare to the
+‘refPattern’. The default is NULL which indicates that all patterns
+would be compared to the ‘refPattern’.</td>
+</tr>
+</tbody>
+</table>
+
+```r
+sessionInfo()
+#> R version 4.2.3 (2023-03-15)
+#> Platform: x86_64-apple-darwin17.0 (64-bit)
+#> Running under: macOS Catalina 10.15.7
+#> 
+#> Matrix products: default
+#> BLAS:   /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRblas.0.dylib
+#> LAPACK: /Library/Frameworks/R.framework/Versions/4.2/Resources/lib/libRlapack.dylib
+#> 
+#> locale:
+#> [1] en_US.UTF-8/en_US.UTF-8/en_US.UTF-8/C/en_US.UTF-8/en_US.UTF-8
+#> 
+#> attached base packages:
+#> [1] stats     graphics  grDevices utils     datasets  methods   base     
+#> 
+#> other attached packages:
+#>  [1] SpaceMarkers_0.1.0     spatstat_3.0-3         spatstat.linnet_3.0-4 
+#>  [4] spatstat.model_3.1-2   rpart_4.1.19           spatstat.explore_3.0-6
+#>  [7] nlme_3.1-162           spatstat.random_3.1-3  spatstat.geom_3.0-6   
+#> [10] spatstat.data_3.0-0    rstatix_0.7.1          pracma_2.4.2          
+#> [13] matrixTests_0.1.9.1    matrixStats_0.63.0     jsonlite_1.8.4        
+#> [16] hdf5r_1.3.8            dplyr_1.1.0            ape_5.6-2             
+#> 
+#> loaded via a namespace (and not attached):
+#>  [1] Rcpp_1.0.10           lattice_0.20-45       tidyr_1.3.0          
+#>  [4] deldir_1.0-6          digest_0.6.31         utf8_1.2.2           
+#>  [7] spatstat.core_2.4-4   plyr_1.8.8            R6_2.5.1             
+#> [10] backports_1.4.1       evaluate_0.20         ggplot2_3.4.0        
+#> [13] tensor_1.5            pillar_1.8.1          rlang_1.0.6          
+#> [16] rstudioapi_0.14       car_3.1-1             jquerylib_0.1.4      
+#> [19] Matrix_1.5-3          goftest_1.2-3         qvalue_2.28.0        
+#> [22] rmarkdown_2.20        splines_4.2.3         stringr_1.5.0        
+#> [25] munsell_0.5.0         polyclip_1.10-4       bit_4.0.5            
+#> [28] broom_1.0.3           compiler_4.2.3        xfun_0.36            
+#> [31] pkgconfig_2.0.3       mgcv_1.8-42           htmltools_0.5.4      
+#> [34] tidyselect_1.2.0      tibble_3.1.8          fansi_1.0.4          
+#> [37] grid_4.2.3            gtable_0.3.1          lifecycle_1.0.3      
+#> [40] magrittr_2.0.3        scales_1.2.1          stringi_1.7.12       
+#> [43] cli_3.6.0             cachem_1.0.6          carData_3.0-5        
+#> [46] reshape2_1.4.4        bslib_0.4.2           spatstat.utils_3.0-1 
+#> [49] generics_0.1.3        vctrs_0.5.2           tools_4.2.3          
+#> [52] bit64_4.0.5           glue_1.6.2            purrr_1.0.1          
+#> [55] abind_1.4-5           parallel_4.2.3        fastmap_1.1.0        
+#> [58] yaml_2.3.7            colorspace_2.1-0      spatstat.sparse_3.0-0
+#> [61] knitr_1.42            sass_0.4.5
+```
