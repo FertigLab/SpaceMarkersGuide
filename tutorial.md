@@ -46,7 +46,7 @@ cogaps_url <- "https://github.com/atuldeshpande/SpaceMarkers-paper/blob/main/CoG
 opt_params_path <- "optParams_breast_cancer.tsv"
 ```
 
-# Extracting Counts Matrix
+## Extracting Counts Matrix
 
 Here the counts matrix will be obtained from the h5 object in the Visium site and genes with less than 3 counts are removed from the dataset.
 
@@ -60,7 +60,7 @@ goodGenes <- rownames(counts_matrix)[apply(counts_matrix,1,function(x) sum(x>0)>
 counts_matrix <- counts_matrix[goodGenes,]
 ```
 
-# Obtaining CoGAPS Patterns
+## Obtaining CoGAPS Patterns
 
 In this example the latent features from CoGAPS will be used to identify overlapping genes with SpaceMarkers. Here the featureLoadings (cells) and samplePatterns (genes) for both the expression matrix and CoGAPS matrix need to match.
 
@@ -73,7 +73,7 @@ counts_matrix <- counts_matrix[features,barcodes]
 cogaps_matrix <- cogaps_result@featureLoadings[features,] %*% t(cogaps_result@sampleFactors[barcodes,])
 ```
 
-# Obtaining Spatial Coordinates
+## Obtaining Spatial Coordinates
 
 The spatial coordinates will also be pulled from Visium for this dataset. These are combined with the latent features to demonstrate how cells for each pattern interact in 2D space.
 
@@ -99,4 +99,110 @@ head(spPatterns)
 #> AAACACCAATAACTGC-1 1.685795e-01 1.223603e-01 0.0001562788 8.041928e-01
 #> AAACAGAGCGACTCCT-1 1.102506e-01 9.053156e-08 0.2429406196 3.430807e-08
 #> AAACAGCTTTCAGAAG-1 9.741083e-06 1.723470e-01 0.3059957027 7.167605e-01
+```
+
+# Executing SpaceMarkers
+
+## SpaceMarker Modes
+
+SpaceMarkers can operate in ‘residual’ mode or ‘DE’ (Differential Expression mode). In an ideal world the overlapping patterns identified by SpaceMarkers would be a homogeneous population of cells and the relationship between them would be linear. However, due to confounding effects of variations in cell density and common cell types in any given region, this is not always true.
+
+To account for these confounding effects, the ‘residual’ mode compares the feature interactions between the expression matrix and the reconstructed latent space matrix. The features with the highest residual error are reported. The genes are then classified according to regions of overlapping vs exclusive influence. The default mode is ‘residual’ mode.
+
+Suppose the feature (gene) information is not readily available and only the sample (cells) latent feature patterns with P-values are available? This is the advantage of ‘DE’ mode. Where residual mode assesses the non-linear effects that may arise from confounding variables, ‘DE’ mode assesses simple linear interactions between patterns. DE mode also compares genes from regions of overlapping vs exclusive influence but does not consider residuals from the expression matrix as there is no matrix reconstruction with the latent feature matrix.
+
+To demonstrate SpaceMarkers we will be looking at Pattern_1 from CoGAPS. Pattern_1 was identified as mainly an immune driven pattern. Pattern_1 is the default setting if no Pattern_n preference is given by the user.
+
+```r
+SpaceMarkersMode = "residual" 
+SpaceMarkersRefPattern = "Pattern_1" 
+```
+
+## Residual Mode
+
+SpaceMarkers identifies regions of influence using a gaussian kernel outlier based model. The reference pattern (Pattern_1 in this case) is used as the prior for this model. SpaceMarkers then identifies where the regions of influence are interacting from each of the other patterns as well as where they are mutually exclusive.
+
+getSpatialParameters: This function identifies the optimal width of the gaussian distribution (sigmaOpt) as well as the outlier threshold around the set of spots (thresOpt) for each pattern.These parameters minimize the spatial autocorrelation residuals of the spots in the regions of influence. This function can take a while so the file would be read in from the data folder for this tutorial.
+
+```r
+#Takes approximately 12 minutes
+#optParams <- getSpatialParameters(spPatterns)
+optParams <- as.matrix(read.csv(opt_params_path, header = TRUE, sep = "\t"))
+head(optParams)
+#>           Pattern_1 Pattern_2 Pattern_3 Pattern_4 Pattern_5
+#> sigmaOpt        7.0       7.8       6.0       7.2       6.4
+#> threshOpt       2.1       1.3       2.6       1.5       1.2
+```
+
+getInteractingGenes: This function identifies the regions of influence and interaction as well as the genes associated with these regions. A non-parametric Kruskal-Wallis test is used to identify genes statistically significant genes in any one region of influence and a post hoc Dunn’s Test is used for analysis of genes between regions. If ‘residual’ mode is selected the user must provide a reconstructed matrix from the latent feature matrix. This is passed to the ‘reconstruction’ argument and can be left as NULL for ‘DE’ mode. The ‘data’ parameter is the original expression matrix. The ‘spatialPatterns’ argument takes a matrix with the spatial coordinates of each cell as well as the patterns. The spatial coordinate columns must have the labels x and y.
+
+The output is a list of data frames with information about the interacting genes of the refPattern and each pattern from the CoGAPS matrix (interacting_genes object). There is also a data frame with all of the regions of influence for any two of patterns (the hotspotRegions object).
+
+For the ‘interacting_genes’ data frames, the first column is the list of genes and the second column says whether the genes are statistically significant in the refPattern only, the interacting pattern only, or both. The remaining columns are statistics for the Kruskal-Wallis test and the post hoc Dunn’s test.
+
+```r
+print(head(SpaceMarkers$interacting_genes[[1]]))
+#>                  Gene Pattern_1 x Pattern_2 KW.obs.tot KW.obs.groups KW.df
+#> CD52             CD52                vsBoth       2061             3     2
+#> CORO1A         CORO1A                vsBoth       2061             3     2
+#> AC239799.2 AC239799.2                vsBoth       2061             3     2
+#> AC015987.1 AC015987.1                vsBoth       2061             3     2
+#> IGLC3           IGLC3                vsBoth       2061             3     2
+#> HLA-DQB1     HLA-DQB1                vsBoth       2061             3     2
+#>            KW.statistic    KW.pvalue     KW.p.adj Dunn.zP1_Int Dunn.zP2_Int
+#> CD52           136.2669 2.570528e-30 1.026239e-29    -2.430175    -9.878900
+#> CORO1A         117.7495 2.697858e-26 9.927205e-26    -2.470913    -9.296994
+#> AC239799.2     113.3366 2.450616e-25 8.839040e-25    -9.423240    -3.019372
+#> AC015987.1     109.6398 1.556057e-24 5.498136e-24    -2.532100    -9.048589
+#> IGLC3          106.8834 6.174019e-24 2.154040e-23    -5.576924   -10.128681
+#> HLA-DQB1       105.1078 1.500154e-23 5.192243e-23    -2.371747    -8.803429
+#>            Dunn.zP2_P1 Dunn.pval_1_Int Dunn.pval_2_Int Dunn.pval_2_1
+#> CD52         -9.036216    1.509155e-02    5.139376e-23  1.621886e-19
+#> CORO1A       -8.260723    1.347686e-02    1.444727e-20  1.447929e-16
+#> AC239799.2    8.719814    4.373794e-21    2.532992e-03  2.786595e-18
+#> AC015987.1   -7.871751    1.133817e-02    1.448270e-19  3.497118e-15
+#> IGLC3        -5.183776    2.448092e-08    4.121719e-24  2.174382e-07
+#> HLA-DQB1     -7.779831    1.770422e-02    1.326984e-18  7.262134e-15
+#>            Dunn.pval_1_Int.adj Dunn.pval_2_Int.adj Dunn.pval_2_1.adj
+#> CD52              4.313251e-02        5.420730e-22      1.558207e-18
+#> CORO1A            3.883638e-02        1.430031e-19      1.247539e-15
+#> AC239799.2        4.393647e-20        8.375101e-03      2.568639e-17
+#> AC015987.1        3.315488e-02        1.394354e-18      2.846410e-14
+#> IGLC3             1.396007e-07        4.463128e-23      1.157326e-06
+#> HLA-DQB1          4.993202e-02        1.237561e-17      5.832096e-14
+print(head(SpaceMarkers$hotspotRegions))
+#>      Pattern_1   Pattern_2   Pattern_3 Pattern_4   Pattern_5  
+#> [1,] "Pattern_1" NA          NA        "Pattern_4" NA         
+#> [2,] NA          "Pattern_2" NA        "Pattern_4" NA         
+#> [3,] NA          NA          NA        "Pattern_4" NA         
+#> [4,] NA          NA          NA        NA          "Pattern_5"
+#> [5,] "Pattern_1" "Pattern_2" NA        NA          NA         
+#> [6,] NA          NA          NA        NA          "Pattern_5"
+```
+
+## DE Mode
+
+As described previously ‘DE’ mode only requires the counts matrix and spatial patterns and not the reconstructed CoGAPS matrix. It identifies simpler molecular interactions between regions.
+
+```r
+
+SpaceMarkersMode = "DE"
+SpaceMarkers_DE <- getInteractingGenes(data = counts_matrix, reconstruction = NULL, optParams = optParams,spatialPatterns = spPatterns, refPattern = SpaceMarkersRefPattern, mode = SpaceMarkersMode)
+#> [1] "Using user provided optParams."
+#> Warning in matrixTests::row_kruskalwallis(x = as.matrix(testMat), g = region):
+#> 2831 columns dropped due to missing group information
+#> Warning: matrixTests::row_kruskalwallis: 209 of the rows were essentially constant.
+#> First occurrence at row 3
+#> Warning in matrixTests::row_kruskalwallis(x = as.matrix(testMat), g = region):
+#> 2979 columns dropped due to missing group information
+#> Warning: matrixTests::row_kruskalwallis: 128 of the rows were essentially constant.
+#> First occurrence at row 67
+#> Warning in matrixTests::row_kruskalwallis(x = as.matrix(testMat), g = region):
+#> 2671 columns dropped due to missing group information
+#> Warning: matrixTests::row_kruskalwallis: 131 of the rows were essentially constant.
+#> First occurrence at row 3
+#> Warning in matrixTests::row_kruskalwallis(x = as.matrix(testMat), g = region):
+#> 2502 columns dropped due to missing group information
+#> Warning: matrixTests::row_kruskalwallis: 186 of the rows were essentially constant.
+#> First occurrence at row 176
 ```
