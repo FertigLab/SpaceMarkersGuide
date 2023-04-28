@@ -206,3 +206,107 @@ SpaceMarkers_DE <- getInteractingGenes(data = counts_matrix, reconstruction = NU
 #> Warning: matrixTests::row_kruskalwallis: 186 of the rows were essentially constant.
 #> First occurrence at row 176
 ```
+
+The warnings above are due to the nature of the ‘sparse’ data being used. Comparing two cells from the two patterns with identical information is redundant as SpaceMarkers is identifying statistically different expression for interactions exclusive to either of the two patterns and a region that is due to interaction between the given two patterns. Also, if there are too many zeros in the genes (rows) of those regions, the columns are dropped as there is nothing to compare in the kruskal wallis test.
+
+## Differences between Residual Mode and DE Mode
+
+To highlight the differences between residual mode and DE mode, the interaction between Pattern1 (immune) and Pattern5 (invasive) will be assessed.
+
+One of the first things to notice is the difference in the number of genes identified between the two modes.
+
+```r
+residual_p1_p2 <- SpaceMarkers$interacting_genes[[4]]
+DE_p1_p2 <- SpaceMarkers_DE$interacting_genes[[4]]
+```
+```r
+#> [1] "Residual mode identified 445 interacting genes, while DE mode identified 2715 interacting genes"
+```
+
+DE mode identified more genes because it does not consider noise that may be associated with common cell types in the interacting regions while residual mode considers these and other confounding variables by taking the residuals between the counts and reconstructed latent feature matrix.
+
+The next analysis will show where the top genes rank in each mode’s list if they are identified at all. A function was created that will take the top 20 genes of a reference list of genes and compares it to the entire list of a second list of genes. The return object is a data frame of the gene, the name of each list and the ranking of each gene as compared to the reference list. If there is no gene identified in the second list compared to the reference it is classified as NA.
+
+```r
+res_to_DE <- compare_genes( head(residual_p1_p2$Gene, n = 20) ,DE_p1_p2$Gene,ref_name = "residual",list2_name = "DE" )
+
+DE_to_res <- compare_genes(head(DE_p1_p2$Gene, n = 20),residual_p1_p2$Gene,ref_name = "DE",list2_name = "residual" )
+```
+```r
+res_to_DE
+#>          Gene residual_Rank DE_Rank
+#> 7      CXCL14             1      NA
+#> 2       APOC1             2      17
+#> 12       IGHE             3       6
+#> 20   Z93241.1             4      NA
+#> 14       PMM2             5      NA
+#> 1     ADORA2A             6      NA
+#> 4        C1QB             7      NA
+#> 17 SUCLG2-AS1             8      NA
+#> 15     SIRLNT             9      NA
+#> 8       GDF15            10      NA
+#> 5        C1QC            11      21
+#> 16    SLC39A4            12      NA
+#> 3      B3GAT2            13      NA
+#> 18       TGM2            14      24
+#> 11      IFI30            15     104
+#> 19     TUBA1C            16      NA
+#> 6     CREB3L4            17      NA
+#> 9    HLA-DRB5            18      NA
+#> 10    HNRNPAB            19       9
+#> 13       MAL2            20      NA
+```
+
+Here we identify the top 20 genes in ‘residual’ mode and their corresponding ranking in DE mode. IGHE, APOC1,C1QC, TGM2 and HNRNPAB are ranked high in both ‘DE’ and ‘residual’ mode. While 14 genes that are ranked high in ‘residual’ mode are not identified at all in ‘DE’ mode
+
+```r
+DE_to_res
+#>       Gene DE_Rank residual_Rank
+#> 11   NUPR1       1            NA
+#> 19  TUBA1B       2            NA
+#> 2     CD74       3            NA
+#> 13   PSMB4       4           121
+#> 4     CYC1       5            66
+#> 7     IGHE       6             3
+#> 15    RPSA       7            NA
+#> 3      CLU       8            25
+#> 6  HNRNPAB       9            19
+#> 18  SQSTM1      10            NA
+#> 16 SELENOM      11            NA
+#> 20  TYROBP      12            24
+#> 14   RPLP1      13            NA
+#> 8    MGST3      14           151
+#> 12  POLR2L      15            NA
+#> 9    NINJ1      16            NA
+#> 1    APOC1      17             2
+#> 5      FN1      18            NA
+#> 17   SERF2      19            NA
+#> 10    NQO1      20            96
+```
+
+In addition to IGHE, HNRNPAB, and APOC1, CLU and TYROBP are also ranked high in both methods. There were 11 genes that were interacting in ‘DE’ mode but not ‘residual’ mode.
+
+There is some agreement with interacting genes between the two methods but there are also quite a few differences. Therefore, the selected mode can significantly impact the downstream results and should be taken into consideration based on the specific biological question being answered and the data available.
+
+# Load 10XExpr() Arguments
+
+<table>
+<thead>
+<tr class="header">
+<th align="left">Argument</th>
+<th align="left">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td align="left">visiumDir</td>
+<td align="left">A string path to the h5 file with expression
+information</td>
+</tr>
+<tr class="even">
+<td align="left">h5filename</td>
+<td align="left">A string of the name of the h5 file in the
+directory</td>
+</tr>
+</tbody>
+</table>
