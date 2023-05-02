@@ -4,6 +4,8 @@
   link: /vignette.html
 - name: Troubleshooting
   link: /troubleshooting/
+- name: Parameters
+  link: /parameters/
 - name: FAQ
   link: /faq/
 #   dropdown: 
