@@ -20,4 +20,4 @@ SpaceMarkers provides a “**differential expression**” (DE) mode to quantify 
 
 While the examples shown here use CoGAPS, SpaceMarkers is generally applicable to latent features from any of a number of linear latent feature factorization approaches available in the literature.
 
-![fx1_lrg.jpg](/images/fx1_lrg.jpg)
+<center>![fx1_lrg.jpg](/images/fx1_lrg.jpg)</center>
