@@ -288,7 +288,7 @@ In addition to IGHE, HNRNPAB, and APOC1, CLU and TYROBP are also ranked high in 
 
 There is some agreement with interacting genes between the two methods but there are also quite a few differences. Therefore, the selected mode can significantly impact the downstream results and should be taken into consideration based on the specific biological question being answered and the data available.
 
-<strong>[SpaceMarkers Parameters](/parameters/)</strong>
+<strong>[SpaceMarkers Parameters](/spacemarkers/parameters/)</strong>
 
 ```r
 sessionInfo()
