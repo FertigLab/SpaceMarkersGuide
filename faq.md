@@ -14,6 +14,6 @@ hero_link_text: GitHub Repository -->
 
 # How do I cite SpaceMarkers?
 
-If you use the SpaceMarkers software please cite:
+If you use the SpaceMarkers software, please cite:
 
 Atul Deshpande, Melanie Loth, et al., <a href="https://www.biorxiv.org/content/10.1101/2022.06.02.490672v1.full#page" target="_blank">Uncovering the spatial landscape of molecular interactions within the tumor microenvironment through latent spaces</a>. <em>bioRxiv</em> 2022. doi:10.1101/2022.06.02.490672
